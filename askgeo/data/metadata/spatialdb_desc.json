@@ -1,0 +1,6 @@
+[
+    {
+        "table_name": "citibike_stations",
+        "table_description": "The New York City Citi Bike Stations dataset provides detailed information about Citi Bike stations across the city, including their locations, statuses, and availability."
+    }
+]
