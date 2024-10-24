@@ -7,6 +7,7 @@ Project for Data Science (2024-FALL)
 4. 추가로 필요한 구현 내용은 주석으로 달아뒀음 (향후 update 예정)
 5. .env file 만들어서 아래 내용 추가해둬야함
 6. data 폴도에 html 파일은 지도 출력 결과 (추후 frontend랑 연결)
+7. 사용자가 특정 건물 위치(지금은 자전거 정류장 위치)를 물었을 때 좌표와 함께 지도 반환하도록 하는 케이스만 구현
 ```
 OPENAI_API_KEY="YOUR API KEY"
 
