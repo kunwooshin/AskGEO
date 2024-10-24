@@ -1,4 +1,3 @@
-
 from sqlalchemy import create_engine, text
 from shapely import wkt
 import folium
