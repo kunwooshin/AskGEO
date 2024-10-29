@@ -4,6 +4,8 @@ import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
 from dotenv import load_dotenv
 
+from askgeo.util.util import log
+
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -35,6 +37,18 @@ def connect_vectorDB(metadata_type):
 
 
 def retrieve_table_names(user_prompt):
-    results = get_collection().query(query_texts=user_prompt, n_results=1)  # 일단 single query 일 때만
+    results = get_collection().query(query_texts=user_prompt)  # 일단 single query 일 때만
     table_name = results['metadatas'][0][0]['table_name']
     return table_name
+
+
+def retrieve_metadata(table_name):
+    log('vecdb', 'retrieve_table_schema', 'not implemented')
+    # TODO: implement
+    return ''
+
+
+def retrieve_semantic(sql):
+    log('vecdb', 'retrieve_semantic', 'not implemented')
+    # TODO: implement
+    return ''

@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from tabulate import tabulate
 
-import askgeo.llm.gpt as llm
 from askgeo.database.geodb import const
 from askgeo.util.util import log
 
@@ -48,7 +47,7 @@ def generate_sql(user_query, metadata):
     prompt = const.text_to_sql_prompt.format(table_schema=table_schema, instruction=instruction, user_query=user_query,
                                              few_shot_examples=None)
 
-    res = llm.inquire_prompt(prompt)
+    res = conn.inquire_prompt(prompt)
 
     json_res = res.replace("```json", "")
     json_res = json_res.replace("```", "")
@@ -62,8 +61,21 @@ def generate_sql(user_query, metadata):
         print(f"JSONDecodeError: {e}")
         print(res.choices[0].message.content)
 
-    log('geodb','generate_sql',geospatial_query)
+    log('geodb', 'generate_sql', geospatial_query)
     return geospatial_query
+
+
+def retrieve_table_metadata(table_name):
+    query = const.schema_retrieval_query.format(table_name=table_name)
+
+    with get_engine().connect() as conn:
+        result = conn.execute(text(query), {"table_name": table_name})
+        rows = result.fetchall()
+        headers = result.keys()
+
+    table_schema = 'TABLE: ' + table_name + '\n' + tabulate(rows, headers, tablefmt="grid")
+
+    return table_schema
 
 
 def execute_sql(sql):

@@ -23,7 +23,7 @@ DATABASE_URI = f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI
-llm = OpenAI(api_key=OPENAI_API_KEY)
+conn = OpenAI(api_key=OPENAI_API_KEY)
 
 
 def load_sample_data():
