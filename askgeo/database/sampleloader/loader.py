@@ -1,15 +1,13 @@
-from sqlalchemy import create_engine, text
-from . import const
 import json
-import chromadb
-import chromadb.utils.embedding_functions as embedding_functions
-import os
-from dotenv import load_dotenv
-import pandas as pd
-from openai import OpenAI
-from dotenv import load_dotenv
 import os
 
+import chromadb
+import chromadb.utils.embedding_functions as embedding_functions
+from dotenv import load_dotenv
+from openai import OpenAI
+from sqlalchemy import create_engine, text
+
+from askgeo.database.sampleloader import const
 
 # Load environment variables
 load_dotenv()
@@ -25,18 +23,7 @@ DATABASE_URI = f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI
-llm = OpenAI(api_key=OPENAI_API_KEY)
-
-# Function to get response from OpenAI LLM
-def llm_call(prompt):
-    response = llm.chat.completions.create(
-        model='gpt-4o-mini',
-        messages=[
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0
-    )
-    return response.choices[0].message.content
+conn = OpenAI(api_key=OPENAI_API_KEY)
 
 
 def load_sample_data():
@@ -50,22 +37,7 @@ def load_sample_data():
     with engine.connect() as conn:
         conn.execute(text(const.sample_data['create_table_query']))
         conn.execute(text(const.sample_data['insert_query']), data)
-        
 
-def connect_vectorDB(metadata_type):
-    client = chromadb.PersistentClient(path='./data/metadata/')
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        api_key=OPENAI_API_KEY,
-        model_name="text-embedding-3-small"
-    )
-    collection_name = metadata_type
-
-    collection = client.get_collection(
-        name=collection_name,
-        embedding_function=openai_ef,
-    )
-    
-    return collection
 
 def create_metadata_collection(metadata_type):
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
@@ -86,7 +58,7 @@ def create_metadata_collection(metadata_type):
             embedding_function=openai_ef,
             metadata={"hnsw:space": "cosine"}
         )
-           
+
         # Add documents and embeddings to ChromaDB collection
         if collection.count() == 0:
             print("CREATING TABLE-NAMES-COLLECTION...")
@@ -96,4 +68,8 @@ def create_metadata_collection(metadata_type):
                 metadatas=[{"table_name": data[i]['table_name']} for i in range(len(data))]
             )
             print("TABLE-NAMES-COLLECTION CREATED!")
-    
+
+
+def load_data():
+    load_sample_data()
+    create_metadata_collection('table_names')

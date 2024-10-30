@@ -1,27 +1,27 @@
-import psycopg2
-import pandas as pd
-from sqlalchemy import create_engine, text
-from util import util, loader
-import json
+import askgeo.rag.rag_flow as rag
 
 
 def main():
-    loader.load_sample_data()
-    loader.create_metadata_collection('table_names')
-    # user_query = input("Enter your question for the Askgeo: ")
-    user_query = 'Leonard Gordon Park 자전거 정류장 좌표알려줘' # 정확한 명칭 입력했다고 가정
-    sql = util.text_to_sql(user_query)
-    wkt_point = util.retrieve_point(sql)
-    
-    if wkt_point:
-        # 사용자 질의에서 name도 추출할 수 있도록 질의 정제 필요
-        name = 'Leonard Gordon Park Station'
-        util.generate_map(name , wkt_point)
+    # loader.load_data() # need only once
 
-        # llm이 wkt_point와 name을 활용해서 대답할 수 있도록 수정해야함
-        print("LLM Response:", wkt_point)
-    else:
-        print("No WKT Point found in the database.")
+    # welcome message
+    print("Welcome to Askgeo!")
+    print("Askgeo is a geospatial question answering chat bot.")
+    print("You can ask questions about geospatial data in the database.")
+    print("Please enter your question in natural language.")
+    print("If you want to exit, type 'exit'.")
+    print("Let's get started!\n")
+
+    rag.setup()
+
+    while True:
+        # user_query = input("Enter your question for the Askgeo: ")
+        # user_prompt = 'Leonard Gordon Park 자전거 정류장 좌표알려줘'  # 정확한 명칭 입력했다고 가정
+        user_prompt = '공원의 자전거 정류장 좌표알려줘 공원 이름은 내가 알려줄게' # one user input + one geodb query
+        response = rag.start_chat(user_prompt)
+        print(response)
+        exit(-1)
+
 
 # Entry point
 if __name__ == "__main__":
