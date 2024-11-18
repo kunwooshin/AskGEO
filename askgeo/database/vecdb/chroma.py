@@ -38,6 +38,7 @@ def connect_vectorDB(metadata_type):
 
 def retrieve_table_names(user_prompt):
     results = get_collection().query(query_texts=user_prompt)  # 일단 single query 일 때만
+    # n_results (검색 결과 수) 조정. default = 10
     table_name = results['metadatas'][0][0]['table_name']
     return table_name
 
