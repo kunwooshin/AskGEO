@@ -37,6 +37,7 @@ def load_sample_data():
     with engine.connect() as conn:
         conn.execute(text(const.sample_data['create_table_query']))
         conn.execute(text(const.sample_data['insert_query']), data)
+        conn.commit()
 
 
 def create_metadata_collection(metadata_type):
