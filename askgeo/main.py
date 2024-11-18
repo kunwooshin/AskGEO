@@ -15,9 +15,13 @@ def main():
     rag.setup()
 
     while True:
-        # user_query = input("Enter your question for the Askgeo: ")
+        user_query = input("Enter your question for the Askgeo: ")
         # user_prompt = 'Leonard Gordon Park 자전거 정류장 좌표알려줘'  # 정확한 명칭 입력했다고 가정
-        user_prompt = '공원의 자전거 정류장 좌표알려줘 공원 이름은 내가 알려줄게' # one user input + one geodb query
+        # user_prompt = '공원의 자전거 정류장 좌표알려줘 공원 이름은 내가 알려줄게' # one user input + one geodb query
+        if user_prompt == 'exit':
+            print('Askgeo terminated')
+            exit(-1)
+            
         response = rag.start_chat(user_prompt)
         if response == 'exit':
             print('Askgeo terminated')
