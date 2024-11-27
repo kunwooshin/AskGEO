@@ -18,3 +18,6 @@ DB_PASSWORD="PASSWORD"
 DB_NAME=postgres
 ```
 main.py 실행시키면 됨. (사용자 질문은 일단 고정해둠)
+
+## feature/nearby
+'24.11.27.
