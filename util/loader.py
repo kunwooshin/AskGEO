@@ -18,6 +18,7 @@ from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 
 import os
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # Load environment variables
@@ -39,6 +40,7 @@ llm = OpenAI(api_key=OPENAI_API_KEY)
 # Initialize Nominatim
 geolocator = Nominatim(user_agent="Askgeo")
 
+
 # Function to get response from OpenAI LLM
 def llm_call(prompt):
     response = llm.chat.completions.create(
@@ -50,6 +52,7 @@ def llm_call(prompt):
     )
     return response.choices[0].message.content
 
+
 def load_embeddings_for_search_help():
     snu_lst = pd.read_csv('./data/snu.csv', header=None)[0].tolist()[1:]
     # Step 2: Load a sentence transformer model
@@ -57,10 +60,11 @@ def load_embeddings_for_search_help():
     # Step 3: Generate embeddings for the building names
     entity_embeddings = model.encode(snu_lst)
     return entity_embeddings
-    
+
+
 def load_sample_data():
     snu_lst = pd.read_csv('./data/snu.csv', header=None)[0].tolist()
-    
+
     loc_data = []
     for building in tqdm(snu_lst, desc="Processing"):
         location = geolocator.geocode(f"{building}, 관악구", geometry='geojson')
@@ -70,7 +74,7 @@ def load_sample_data():
                     "name": building,
                     "address": location.raw['display_name'],
                     "center": Point(location.latitude, location.longitude),
-                    "class": location.raw['class'], # 'building'이 amenity로 잘못 설정된 경우 존재
+                    "class": location.raw['class'],  # 'building'이 amenity로 잘못 설정된 경우 존재
                     "geometry": Polygon(location.raw['geojson']['coordinates'][0]),
                 })
             else:
@@ -86,7 +90,6 @@ def load_sample_data():
 
     engine = create_engine(DATABASE_URI)
     gdf.to_postgis('snu', engine, if_exists='replace')
-         
 
 # def load_sample_data():
 #     json_file_path = './data/citibike_stations_sample.json'
@@ -99,7 +102,7 @@ def load_sample_data():
 #     with engine.connect() as conn:
 #         conn.execute(text(const.sample_data['create_table_query']))
 #         conn.execute(text(const.sample_data['insert_query']), data)
-        
+
 
 # def connect_vectorDB(metadata_type):
 #     client = chromadb.PersistentClient(path='./data/metadata/')
@@ -113,7 +116,7 @@ def load_sample_data():
 #         name=collection_name,
 #         embedding_function=openai_ef,
 #     )
-    
+
 #     return collection
 
 # def create_metadata_collection(metadata_type):
@@ -135,7 +138,7 @@ def load_sample_data():
 #             embedding_function=openai_ef,
 #             metadata={"hnsw:space": "cosine"}
 #         )
-           
+
 #         # Add documents and embeddings to ChromaDB collection
 #         if collection.count() == 0:
 #             print("CREATING TABLE-NAMES-COLLECTION...")
@@ -145,4 +148,3 @@ def load_sample_data():
 #                 metadatas=[{"table_name": data[i]['table_name']} for i in range(len(data))]
 #             )
 #             print("TABLE-NAMES-COLLECTION CREATED!")
-    

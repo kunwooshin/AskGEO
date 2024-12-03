@@ -21,7 +21,7 @@ def main():
         if user_prompt == 'exit':
             print('Askgeo terminated')
             exit(-1)
-            
+
         response = rag.start_chat(user_prompt)
         if response == 'exit':
             print('Askgeo terminated')

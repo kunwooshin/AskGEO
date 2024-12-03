@@ -55,10 +55,10 @@ def start_chat(user_prompt):
             query = retrieval.query
             response = input(query + "\nPlease type your response: ")
             retrieval.response = response
-            
+
             if response == 'exit':
                 return 'exit'
-                        
+
         log('rag', 'retrieve_action', retrieve_action)
 
         interaction = llm.inquire_action(first_prompt, conversation)

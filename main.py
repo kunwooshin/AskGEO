@@ -6,9 +6,11 @@ import json
 import geopandas as gpd
 from shapely.geometry import Point, Polygon
 
+
 class AskGeo:
     def __init__(self, database_uri):
         self.DATABASE_URI = loader.DATABASE_URI
+
 
 def main():
     # loader.load_sample_data()
@@ -18,7 +20,7 @@ def main():
     print("If you want to exit, type 'exit'.")
     print("ex1) Show me the buildings within 300 meters of the Cultural Center")
     print("ex2) Tell me the coordinate of KWANJEONG Library")
-    
+
     initial_query = False
     while True:
         if initial_query:
@@ -30,12 +32,12 @@ def main():
             if user_query.lower() == "exit":
                 print("Goodbye!")
                 break
-        
+
         # FIXME: 사용자에게 additional information 요구하는 추가 질문하는 대화 추가.
-        prompt = const.input_prompt.format(user_query = user_query)
+        prompt = const.input_prompt.format(user_query=user_query)
         response = loader.llm_call(prompt)
-        print(response)        
-        
+        print(response)
+
         answer, map_result = util.handle_action(response)
 
         if answer == 'unknown action':
@@ -43,11 +45,12 @@ def main():
             continue
         elif answer == 'no data':
             continue
-        
-        print(answer)
-        print(map_result)        
 
-# Entry point
+        print(answer)
+        print(map_result)
+
+    # Entry point
+
+
 if __name__ == "__main__":
     main()
-    
